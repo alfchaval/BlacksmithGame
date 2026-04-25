@@ -52,6 +52,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+        lifeText.text = life.ToString();
         lastPatrolPointIndex = GetCloserPatrolPointIndex();
         chanceToIdle = chanceToIdleDefault;
         SetStatus(EnemyStatus.Idle, true);
@@ -183,14 +184,34 @@ public class Enemy : MonoBehaviour
                 {
                     if (Utils.HorizontalDistance(transform.position, patrolPoints[nextPatrolPointIndex].transform.position) < maxDistancePatrollingPoint)
                     {
-                    
+                        chanceToIdle = chanceToIdleDefault;
+                        SetStatus(EnemyStatus.Idle, true);
+                    }
+                }
+                else if (!EnemyLocked())
+                {
+                    chanceToIdle -= chanceToIdleChange;
+                    if (UnityEngine.Random.value < chanceToIdle)
+                    {
+                        SetStatus(EnemyStatus.Idle, true);
+                    }
+                    else
+                    {
+                        SetStatus(EnemyStatus.Patrolling, true);
                     }
                 }
             }
         }
         else if (!EnemyLocked())
         {
-
+            if (PlayerIsInAttackRange())
+            {
+                SetStatus(EnemyStatus.Attacking, true);
+            }
+            else
+            {
+                SetStatus(EnemyStatus.Chasing, true);
+            }
         }
     }
 
@@ -235,6 +256,8 @@ public class Enemy : MonoBehaviour
     public void Hit(Weapon weapon)
     {
         //Determine damage
+        life -= 10;
+        lifeText.text = life.ToString();
         if (life < 1)
         {
             SetStatus(EnemyStatus.Dead, true);
@@ -243,5 +266,10 @@ public class Enemy : MonoBehaviour
         {
             SetStatus(EnemyStatus.Flinching, true);
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawSphere(eyes.position, 0.1f);
     }
 }

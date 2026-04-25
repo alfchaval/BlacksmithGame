@@ -151,7 +151,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1780535422509715604}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -262,6 +262,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faff171e802d3bc4eaa5bf26486869c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  enemyImage: {fileID: 4764668341267607359}
+  patrolPoints: []
+  chanceToIdleDefault: 0.8
+  chanceToIdleChange: 0.1
+  maxDistancePatrollingPoint: 0.1
+  eyes: {fileID: 2646622876162946655}
+  detectionAngle: 90
+  detectionDistance: 10
+  navMeshAgent: {fileID: 3417112534661058127}
+  lifeText: {fileID: 0}
+  attackRange: 1
 --- !u!195 &3417112534661058127
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -315,6 +326,7 @@ Transform:
   m_Children:
   - {fileID: 2607736834469131420}
   - {fileID: 7089110149574315434}
+  - {fileID: 2646622876162946655}
   m_Father: {fileID: 7524371375837565953}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7539398296862359353
@@ -392,3 +404,34 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &8071485535626680000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2646622876162946655}
+  m_Layer: 0
+  m_Name: Eyes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2646622876162946655
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8071485535626680000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7558910684779287694}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
