@@ -1,5 +1,5 @@
 using System.Collections;
-using Unity.Android.Gradle.Manifest;
+//using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.UI;
 
