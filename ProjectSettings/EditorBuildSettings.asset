@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Map_Ice.unity
     guid: 680d580ca0fa15a4a93c3f1afeedab2a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Map_Village.unity
     guid: 4889b43ef6dd5cf4b84e0d1e33336a96
   - enabled: 1
