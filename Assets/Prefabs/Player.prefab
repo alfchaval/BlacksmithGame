@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1431690823869649540}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -350,13 +350,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 551bad01c3a60694a89b36e21936aeab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  playerInput: {fileID: 0}
   speed: 5
   mouseSensitivity: 200
   controller: {fileID: 732116999433746840}
   cameraPivot: {fileID: 5709383113360291510}
-  weaponImage: {fileID: 0}
-  shieldImage: {fileID: 0}
+  weaponImage: {fileID: 2402340468328418542}
+  shieldImage: {fileID: 8853118168955290513}
+  weaponChargeAnimation:
+    sprites: []
+    totalTime: 0
+  weaponHitAnimation:
+    sprites: []
+    totalTime: 0
+  shieldAnimation:
+    sprites: []
+    totalTime: 0
 --- !u!1 &4948139513952637232
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,7 +390,7 @@ Transform:
   m_GameObject: {fileID: 4948139513952637232}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

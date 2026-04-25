@@ -52,7 +52,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        lifeText.text = life.ToString();
+        //lifeText.text = life.ToString();
         lastPatrolPointIndex = GetCloserPatrolPointIndex();
         chanceToIdle = chanceToIdleDefault;
         SetStatus(EnemyStatus.Idle, true);

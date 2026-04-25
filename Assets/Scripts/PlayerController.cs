@@ -1,13 +1,13 @@
 using System.Collections;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.Windows;
 
 public class PlayerController : MonoBehaviourInstance<PlayerController>
 {
     [Header("Settings")]
     public float speed = 5f;
+    public float jumpHeight = 1;
     public float mouseSensitivity = 200f;
     public CharacterController controller;
     public Transform cameraPivot;
@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviourInstance<PlayerController>
     private Vector2 moveInput;
     private Vector2 lookInput;
     private float xRotation = 0f;
+    private float ySpeed;
+    private bool jumping;
     private bool chargingAttack;
 
     private Coroutine weaponCoroutine = null;
@@ -48,6 +50,40 @@ public class PlayerController : MonoBehaviourInstance<PlayerController>
         transform.Rotate(Vector3.up * mouseX);
 
         Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
+
+        if (controller.isGrounded)
+        {
+            if (ySpeed < 0)
+                ySpeed = -2f;
+
+            if (jumping)
+            {
+                ySpeed = Mathf.Sqrt(jumpHeight * -2f * Utils.gravity);
+            }
+        }
+        else
+        {
+            ySpeed -= Utils.gravity * Time.deltaTime;
+        }
+
+        if (controller.isGrounded && ySpeed < 0)
+        {
+            ySpeed = -2f;
+        }
+        else
+        {
+            ySpeed -= Utils.gravity * Time.deltaTime;
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.5f)) 
+        {
+            move = Vector3.ProjectOnPlane(move, hit.normal);
+        }
+
+        Vector3 finalMove = move * speed + Vector3.up * ySpeed;
+        controller.Move(finalMove * Time.deltaTime);
+
         controller.Move(move * speed * Time.deltaTime);
     }
 
