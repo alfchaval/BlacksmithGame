@@ -1,15 +1,19 @@
 using System;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class Enemy : MonoBehaviour
 {
     [Header("Sprites")]
+    public Transform canvasTransform;
     public Image enemyImage;
+    public Animator enemyAnimator;
     public SpriteAnimation idleAnimation;
     public SpriteAnimation walkAnimation;
     public SpriteAnimation attackAnimation;
@@ -39,6 +43,7 @@ public class Enemy : MonoBehaviour
     private float chanceToIdle;
     private int lastPatrolPointIndex = -1;
     private int nextPatrolPointIndex;
+    private bool attacking;
 
     public enum EnemyStatus
     {
@@ -102,6 +107,7 @@ public class Enemy : MonoBehaviour
         {
             index++;
         }
+        lastPatrolPointIndex = nextPatrolPointIndex;
         nextPatrolPointIndex = index;
     }
 
@@ -109,6 +115,7 @@ public class Enemy : MonoBehaviour
     {
         if (currentStatus != enemyStatus || force)
         {
+            attacking = false;
             currentStatus = enemyStatus;
             switch (enemyStatus)
             {
@@ -127,6 +134,7 @@ public class Enemy : MonoBehaviour
                     PlayAnimation(walkAnimation);
                     break;
                 case EnemyStatus.Attacking:
+                    attacking = true;
                     PlayAnimation(attackAnimation);
                     break;
                 case EnemyStatus.Flinching:
@@ -157,9 +165,29 @@ public class Enemy : MonoBehaviour
             yield return new WaitForSeconds(timePerSprite);
         }
         animationCoroutine = null;
+        if (attacking)
+        {
+            Ray ray = new Ray(eyes.position, eyes.forward);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, attackRange))
+            {
+                PlayerController player = hit.transform.GetComponentInParent<PlayerController>();
+                if (player)
+                {
+                    player.Hit(null);
+                }
+            }
+        }
     }
 
     private void Update()
+    {
+        UpdateStatus();
+        RotateSprite();
+    }
+
+    private void UpdateStatus()
     {
         if (!playerDetected)
         {
@@ -215,6 +243,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void RotateSprite()
+    {
+        Vector3 direction = PlayerController.GetInstance().transform.position - transform.position;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        canvasTransform.rotation = Quaternion.Euler(0f, rotation.eulerAngles.y, 0f);
+    }
+
     private bool EnemyLocked()
     {
         return animationCoroutine != null;
@@ -255,7 +290,6 @@ public class Enemy : MonoBehaviour
 
     public void Hit(Weapon weapon)
     {
-        //Determine damage
         life -= 10;
         lifeText.text = life.ToString();
         if (life < 1)

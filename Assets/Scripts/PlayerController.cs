@@ -9,12 +9,14 @@ public class PlayerController : MonoBehaviourInstance<PlayerController>
     public float speed = 5f;
     public float jumpHeight = 1;
     public float mouseSensitivity = 200f;
+    public float hitDistance = 1;
     public CharacterController controller;
     public Transform cameraPivot;
 
     [Header("UI")]
     public Image weaponImage;
     public Image shieldImage;
+    public Animator playerAnimator;
     public SpriteAnimation weaponChargeAnimation;
     public SpriteAnimation weaponHitAnimation;
     public SpriteAnimation shieldAnimation;
@@ -25,6 +27,7 @@ public class PlayerController : MonoBehaviourInstance<PlayerController>
     private float ySpeed;
     private bool jumping;
     private bool chargingAttack;
+    private bool attacking;
 
     private Coroutine weaponCoroutine = null;
     private Coroutine shieldCoroutine = null;
@@ -89,9 +92,9 @@ public class PlayerController : MonoBehaviourInstance<PlayerController>
 
     private void StartAttack()
     {
-        chargingAttack = true;
         if (weaponCoroutine == null)
         {
+            chargingAttack = true;
             weaponCoroutine = StartCoroutine(WeaponEnumerator(weaponChargeAnimation, true));
         }
     }
@@ -101,6 +104,7 @@ public class PlayerController : MonoBehaviourInstance<PlayerController>
         chargingAttack = false;
         if (weaponCoroutine == null)
         {
+            attacking = true;
             weaponCoroutine = StartCoroutine(WeaponEnumerator(weaponHitAnimation, false));
         }
     }
@@ -114,9 +118,28 @@ public class PlayerController : MonoBehaviourInstance<PlayerController>
             yield return new WaitForSeconds(timePerSprite);
         }
         weaponCoroutine = null;
-        if (needsEnd && !chargingAttack)
+        if (!chargingAttack && !attacking)
         {
             EndAttack();
+        }
+        if (attacking)
+        {
+            Ray ray = new Ray(cameraPivot.position, cameraPivot.forward);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, hitDistance))
+            {
+                Enemy enemy = hit.transform.GetComponentInParent<Enemy>();
+                if (enemy)
+                {
+                    enemy.Hit(null);
+                }
+                Mineral mineral = hit.transform.GetComponentInParent<Mineral>();
+                if (mineral)
+                {
+                    mineral.Hit(null);
+                }
+            }
         }
     }
 
